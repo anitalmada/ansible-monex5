@@ -1,0 +1,1 @@
+Ansible exercise to create playbooks to install and configure some services in Vagrant machines. Webserver utilities are installed and some minor changes are done to test different Ansible modules (changing files with privileged users).
