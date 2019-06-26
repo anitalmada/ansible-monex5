@@ -1,0 +1,23 @@
+---
+  - hosts: centos
+    become: true
+    tasks:
+      - name: Copy motd file
+        copy:
+          src: motd
+          dest: /etc/motd 
+  - hosts: ubuntu
+    become: true
+    tasks:
+      - name: Stop motd service
+        service: 
+          name: motd
+          enabled: no
+      - name: Copy new motd message
+        copy:
+          src: ubuntu-motd.sh
+          dest: /etc/profile.d/motd.sh
+      - name: remove motd folder
+        file:
+          path: /etc/update-motd.d/
+          state: absent

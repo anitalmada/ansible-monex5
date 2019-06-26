@@ -1,0 +1,6 @@
+---
+- hosts: [centos, ubuntu]
+  become: true
+  tasks:
+    - name: Copy origin public key to auth keys
+      authorized_key: user=vagrant key="{{  lookup('file', lookup('env','HOME') + '/.ssh/id_rsa.pub') }}"

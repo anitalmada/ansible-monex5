@@ -1,0 +1,57 @@
+---
+- hosts: centos
+  become: true
+  tasks:
+    - name: Add repository
+      yum_repository:
+        name: epel
+        description: EPEL YUM repo
+        baseurl: https://download.fedoraproject.org/pub/epel/$releasever/$basearch/
+        gpgcheck: no
+    - name: install web components and vsftpd
+      yum: 
+        name: 
+          - httpd
+          - vsftpd
+          - boxes 
+        state: present 
+        update_cache: yes
+    - name: update all packages
+      yum:    
+        name: "*"
+        state: latest
+    - name: Modify index page with jinja2 template
+      template:
+        src: index.j2
+        dest: /var/www/html/index.html 
+        backup: yes
+  handlers:
+    - name: start and enable all services
+      service:
+        name: "{{ item }}"
+        state: started
+        enabled: yes
+      with_items:
+        - "httpd"
+        - "vsftpd"
+- hosts: ubuntu
+  become: true
+  tasks:
+    - name: install web components
+      apt: 
+        name: 
+        - apache2 
+        - boxes
+        state: present 
+        update_cache: yes
+    - name: Modify index page with jinja2 template
+      template:
+        src: index.j2
+        dest: /var/www/html/index.html 
+        backup: yes
+  handlers:
+    - name: start and enable all services
+      service:
+        name: apache2
+        state: started
+        enabled: yes
